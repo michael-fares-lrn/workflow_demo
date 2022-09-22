@@ -7,7 +7,7 @@ use LearnositySdk\Utils\Uuid;
 use LearnositySdk\Request\DataApi;
 use LearnositySdk\Request\Remote;
 
-$session_id = $_COOKIE['session'];
+$session_id = filter_input(INPUT_GET, 'session_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 $consumer_key = 'yis0TYCu7U9V4o7M';
 $consumer_secret = '74c5fd430cf1242a527f6223aebd42d30464be22';

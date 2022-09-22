@@ -14,11 +14,6 @@ $security = [
     'domain'       => 'localhost'
 ];
 
-// unset the activity_reference cookie if it exists
-if(isset($_COOKIE['reference'])) {
-    unset($_COOKIE['reference']); 
-}
-
 
 $request = [
     'mode' => 'activity_edit',
@@ -83,7 +78,7 @@ $signedRequest = $Init->generate();
         Author an activity here. When finished, press "save".
     </h2>
     <span>Next stop:  Once saved,
-    <a href="./assessment.php">
+    <a id="link" href="">
             click here 
         </a>
         to take the activity you just created as an assessment via Items API!
@@ -101,9 +96,12 @@ $signedRequest = $Init->generate();
             console.log("Author API has successfully initialized.");
             authorApp.on('save:activity:success', () => {
                 // set reference cookie to activity reference (to be used as activity_template_id in Items request)
-                const ref = authorApp.getActivityReference();
-                console.log('activity reference', ref); 
-                document.cookie = `reference=${ref}`
+                const activityRef = authorApp.getActivityReference();
+                const link = document.querySelector('#link');
+                
+                    link.href = `assessment.php?activityRef=${activityRef}`
+                
+               
             }) 
                        
         },

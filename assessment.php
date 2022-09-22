@@ -11,12 +11,13 @@ $security = [
     'domain'       => 'localhost'
 ];
 
-// unset the session id cookie if it is set
-if(isset($_COOKIE['session'])) {
-    unset($_COOKIE['session']); 
-}
 
-$activity_template_id = $_COOKIE['reference'];
+$activity_template_id = filter_input(INPUT_GET, 'activityRef', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+$session_id = filter_input(INPUT_GET, 'session_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS, [ 'options' => ['default'=>Uuid::generate()] ]);
+
+$reports_url = "report.php?session_id=$session_id";
+
 
 echo "activity_template_id: $activity_template_id";
 
@@ -27,11 +28,11 @@ $request = [
     'name' => 'Items API demo - assess activity',
     'rendering_type' => 'assess',
     'type' => 'submit_practice',
-    'session_id' => Uuid::generate(),
+    'session_id' => $session_id,
     'user_id' => '$ANONYMIZED_USER_ID',
     'config' => [
         'configuration' => [
-            'onsubmit_redirect_url' => './report.php'
+            'onsubmit_redirect_url' => $reports_url
         ]
     ]
 ];
@@ -60,11 +61,6 @@ $signedRequest = $Init->generate();
     const callbacks = {
         readyListener: function () {
             console.log("Items API has successfully initialized.");
-            itemsApp.on('test:submit:success', () => {
-                const session = itemsApp.getActivity().session_id
-                console.log('session', session)
-                document.cookie = `session=${session}`
-            })
         },
         errorListener: function (err) {
             console.log(err);

@@ -11,7 +11,7 @@ $security = [
     'domain'       => 'localhost'
 ];
 
-$session_id = $_COOKIE['session'];
+$session_id = filter_input(INPUT_GET, 'session_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 echo "session_id: $session_id";
 
@@ -42,7 +42,7 @@ $signedRequest = $Init->generate();
         Here is a report of the assessment you just took. This is the 'Session detail by item' report, just <em>one</em> of many availabe report types at Learnosity.
     </h2>
     <span>Next stop: 
-    <a href="./data.php">
+    <a href="/data.php?session_id=<?=$session_id?>">
            click here
         </a>
         to see much more information on your session with Data API.
